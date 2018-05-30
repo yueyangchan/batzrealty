@@ -15,7 +15,9 @@ months <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "1
 ui <- navbarPage(
   title = "Using Zillow API",
   
-  # Zechariah Cheung
+  ####################
+  # Zechariah Cheung #
+  ####################
   tabPanel(
     title = "Distance from Seattle",
     sidebarLayout(
@@ -50,7 +52,9 @@ ui <- navbarPage(
     )
   ),
   
-  # Addison Sengvilay
+  #####################
+  # Addison Sengvilay #
+  #####################
   tabPanel(
     title = "Rate of Growth",
     sidebarPanel(
