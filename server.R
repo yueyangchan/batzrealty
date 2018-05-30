@@ -131,7 +131,9 @@ server <- function(input, output) {
   
   # output the city that was clicked on
   output$selected_city <- renderText({
-    return(clicked_city$city)
+    city <- clicked_city$city
+    capitalized_city<- paste0(toupper(substring(city, 1,1)), substring(city, 2))
+    return(capitalized_city)
   })
   
   # output the neighborhood that is being hovered
@@ -153,7 +155,7 @@ server <- function(input, output) {
       geom_smooth(mapping = aes(x = dist, y = price, alpha = 1), show.legend = FALSE) +
       # create point plot with points in the same city
       # as the clicked point colored a contrasting color
-      geom_point(aes(color = (city %in% clicked_city$city)), size = 3) +
+      geom_point(aes(color = (city %in% clicked_city$city)), size = 4) +
       guides(color = FALSE) +
       labs(
         title = "Price in USD vs Distance from Downtown in miles",
