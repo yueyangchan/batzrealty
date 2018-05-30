@@ -4,6 +4,8 @@
 shinyServer(function(input, output, session) {
   library("ggplot2")
   library("dplyr")
+  library("XML")
+  library("jsonlite")
   
   # paramters for GET request
   base_uri <- "http://www.zillow.com/webservice/GetRegionChildren.htm"
@@ -26,8 +28,8 @@ shinyServer(function(input, output, session) {
       "&childtype=",
       childtype
       )
-    response <- xmlParse(uri)
-    print(response)
+    response <- (uri)
+  
     list <- xmlToList(response)
     list <- toJSON(list, pretty = TRUE)
     list <- fromJSON(list)
@@ -45,6 +47,26 @@ shinyServer(function(input, output, session) {
     df <- df %>% mutate(city = city)
     return(df)
   }
+  
+  # calculate distance based on two 
+  # set of longitude and latitude points
+  earth.dist <- function(long1, lat1, long2, lat2)
+  {
+    rad <- pi/180
+    a1 <- lat1 * rad
+    a2 <- long1 * rad
+    b1 <- lat2 * rad
+    b2 <- long2 * rad
+    dlon <- b2 - a2
+    dlat <- b1 - a1
+    a <- (sin(dlat/2))^2 + cos(a1) * cos(b1) * (sin(dlon/2))^2
+    c <- 2 * atan2(sqrt(a), sqrt(1 - a))
+    R <- 6378.145
+    d <- R * c
+    return(d)
+  }
+  
+  seattle_lat_long <- c(47.608013, -122.335167)
   
   # combine all the dataframes into a a single dataframe
   realstate_df <- rbind(
