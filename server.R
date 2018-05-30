@@ -113,6 +113,8 @@ server <- function(input, output) {
   # create variable that stores the value that is being clicked on
   clicked_city <- reactiveValues()
   clicked_city$city <- ""
+  hover <- reactiveValues()
+  hover$loc <- ""
   
   # observe when plot is clicked on to set city 
   # that was clicked on to a new color
@@ -121,9 +123,20 @@ server <- function(input, output) {
     clicked_city$city <- unique(selected$city)
   })
   
+  # observe and record when a point is being hovered over
+  observeEvent(input$hover, {
+    selected <- nearPoints(realstate_reactive(), input$hover)
+    hover$loc <- unique(selected$name)
+  })
+  
   # output the city that was clicked on
   output$selected_city <- renderText({
     return(clicked_city$city)
+  })
+  
+  # output the neighborhood that is being hovered
+  output$hover_name <- renderText({
+    return(hover$loc)
   })
   
   # output the intext correlation text

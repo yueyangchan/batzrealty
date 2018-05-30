@@ -40,11 +40,16 @@ ui <- navbarPage(
             price of the house along with many other factors."),
             "Plot",
             # create interactive click plot
-            plotOutput("plot", click = "plot_click"),
+            plotOutput("plot", click = "plot_click", hover = "hover"),
             # display city that is currently selected
             p(
-              "Selected City:",
+              "Clicked City:",
               strong(textOutput("selected_city", inline = TRUE))
+            ),
+            # display hovered neighborhood
+            p(
+              "Hovered Neighborhood:",
+              strong(textOutput("hover_name", inline = TRUE))
             )
           )
         )
