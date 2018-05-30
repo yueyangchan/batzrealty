@@ -22,18 +22,23 @@ ui <- navbarPage(
       p("MOST RECENT DATE AVAILABLE: ", strong("2018-04")),
       selectInput("start_year",
                   label = "Starting Year",
+                  selected = 1994,
                   choices = years),
       selectInput("start_month",
                   label = "Starting Month",
+                  selected = "04",
                   choices = months),
       selectInput("end_year",
                   label = "Ending Year",
+                  selected = 2018,
                   choices = years),
       selectInput("end_month",
                   label = "Ending Month",
+                  selected = "04",
                   choices = months),
       selectInput("states",
                   label = "States (for Cities tab)",
+                  selected = "WA",
                   choices = state_names),
       actionButton("submit", 
                    label = "Submit")
@@ -45,13 +50,14 @@ ui <- navbarPage(
         
         tabPanel(
           title = "States",
-          plotOutput("state_rate_plot"),
-          textOutput("test")
+          plotOutput("state_rate_plot", width = "100%", height = "600px"),
+          tableOutput("state_rate_table")
+          # textOutput("state_text")
         ),
       
         tabPanel(
           title = "Cities",
-          tableOutput("city_rate_table")
+          dataTableOutput("city_rate_table")
         )
       )
     )
