@@ -13,7 +13,7 @@ years <- c(1996:2018)
 months <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
 
 ui <- navbarPage(
-  title = "Using Zillow API",
+  title = "Housing Data",
   
   ####################
   # Zechariah Cheung #
