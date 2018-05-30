@@ -45,7 +45,8 @@ ui <- navbarPage(
         
         tabPanel(
           title = "States",
-          plotOutput("state_rate_plot")
+          plotOutput("state_rate_plot"),
+          textOutput("test")
         ),
       
         tabPanel(

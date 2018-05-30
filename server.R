@@ -3,11 +3,13 @@
 # install.packages("XML")
 # install.packages("jsonlite")
 # install.packages("dplyr")
+# install.packages("ggplot2")
 
 library("shiny")
 library("XML")
 library("jsonlite")
 library("dplyr")
+library("ggplot2")
 
 # File as of 5-29-18.
 all_state <- read.csv("data/State_Zhvi_AllHomes.csv", stringsAsFactors = FALSE)
@@ -20,7 +22,7 @@ all_city <- read.csv("data/City_Zhvi_AllHomes.csv", stringsAsFactors = FALSE)
 
 # PSEUDOCODE
 # Pick from a date range: let user choose year and month, then make that into a string for easy access.
-# Pick from past to present dates (ex. X1994.04, X2009.06)
+# Pick from past to present dates (ex. X1996.04, X2009.06)
 # Calculate the percent increase from past date to present date for each state (make sure to take into account missing dates: North Dakota)
 # Display visualization of a map of the UNITED STATES.
 # Color each state by rate of increase.
@@ -28,10 +30,60 @@ all_city <- read.csv("data/City_Zhvi_AllHomes.csv", stringsAsFactors = FALSE)
 # Maybe add a table underneath for indepth data on a single state?
 # Do another thing for all cities in a state. Just show a graph, sorted by the city with the highest rate of growth.
 
+state_map_data <- map_data("state")
+
+sdate <- "X1996.04"
+edate <- "X2018.04"
+
+# % increase = Increase ÷ Original Number × 100
+
+new_state <- all_state %>%
+  select("RegionName", sdate, edate) %>%
+  summarize(per_inc = ((all_state[edate] - all_state[sdate]) / all_state[sdate] * 100))
+
 server <- function(input, output) {
-  output$state_rate_plot
+  
+  rog_vals <- reactiveValues()
+  rog_vals$start_year <- ""
+  rog_vals$start_month <- ""
+  rog_vals$end_year <- ""
+  rog_vals$end_month <- ""
+  rog_vals$states <- ""
+  
+  observeEvent(
+    input$submit, {
+    rog_vals$start_year <- input$start_year
+    rog_vals$start_month <- input$start_month
+    rog_vals$end_year <- input$end_year
+    rog_vals$end_month <- input$end_month
+    rog_vals$states <- input$states
+  })
+
+  output$state_rate_plot <- renderPlot(
+    ggplot(world_map_data) +
+    geom_polygon(aes(x = long, y = lat, group = group, fill = region)) +
+    coord_quickmap() +
+    labs(title = "TITLE", fill = "LEGEND") +
+    theme(legend.position = "none",
+          axis.line=element_blank(),
+          axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank())
+  ) 
   
   output$city_rate_table
+  
+  output$test <- renderText({
+    paste(rog_vals$start_year,
+    rog_vals$start_month,
+    rog_vals$end_year,
+    rog_vals$end_month,
+    rog_vals$states)
+  })
+  
+  
 }
 
 shinyServer(server)
