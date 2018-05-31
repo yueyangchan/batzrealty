@@ -30,6 +30,14 @@ library("maps")
 # parameters along with a session for changing the input slider
 # bar based on filtered smallest and largest values
 server <- function(input, output) {
+  library("shiny")
+  library("XML")
+  library("jsonlite")
+  library("dplyr")
+  library("ggplot2")
+  library("stringr")
+  library("plotly")
+  library("maps")
   
   ####################
   # Zechariah Cheung #

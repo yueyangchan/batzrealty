@@ -5,8 +5,8 @@ account: uwtedchan
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 351993
-bundleId: 1403375
+bundleId: 1403394
 url: https://uwtedchan.shinyapps.io/batzrealty/
-when: 1527797959.00137
+when: 1527798402.26193
 asMultiple: FALSE
 asStatic: FALSE
