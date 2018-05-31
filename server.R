@@ -24,6 +24,7 @@ library("dplyr")
 library("ggplot2")
 library("stringr")
 library("plotly")
+library("maps")
 
 # create shiny server function with regular input and output
 # parameters along with a session for changing the input slider

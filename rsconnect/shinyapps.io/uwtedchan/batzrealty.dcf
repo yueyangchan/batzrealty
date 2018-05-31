@@ -1,0 +1,12 @@
+name: batzrealty
+title: batzrealty
+username:
+account: uwtedchan
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 351993
+bundleId: 1403375
+url: https://uwtedchan.shinyapps.io/batzrealty/
+when: 1527797959.00137
+asMultiple: FALSE
+asStatic: FALSE
