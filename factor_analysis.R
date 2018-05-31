@@ -1,6 +1,5 @@
 library(forecast)
 library(FNN)
-library(caret)
 library(rpart)
 library(dplyr)
 library(rpart.plot)
@@ -78,81 +77,43 @@ model.df.lm <- lm(Zestimate ~ ., data = train.df)
 options(scopen = 999)
 summary(model.df.lm)
 
-###################
-#### KNN Model ####
-###################
-# Generate new data frame for KNN model
-knn.model_df <- model_df
+######################
+### Random Forrest ###
+######################
+rf.model_df <- model_df
 
 # Create new column to categorize home value
-knn.model_df$Value.Quartile <- NA
+rf.model_df$Value.Quartile <- NA
 
 # Extract quartile data from home value
-quartile_data <- as.data.frame(quantile(knn.model_df$Zestimate))
+quartile_data <- as.data.frame(quantile(rf.model_df$Zestimate))
 
 # Populate the home value quartile column
-for (i in 1:nrow(knn.model_df)) {
+for (i in 1:nrow(rf.model_df)) {
   ob = ""
-  if (knn.model_df[i, "Zestimate"] > quartile_data[4, ]) {
+  if (rf.model_df[i, "Zestimate"] > quartile_data[4, ]) {
     ob = ">75%"
-  } else if (knn.model_df[i, "Zestimate"] > quartile_data[3, ]) {
+  } else if (rf.model_df[i, "Zestimate"] > quartile_data[3, ]) {
     ob = "50-75%"
-  } else if (knn.model_df[i, "Zestimate"] > quartile_data[2, ]) {
+  } else if (rf.model_df[i, "Zestimate"] > quartile_data[2, ]) {
     ob = "25-50%"
   } else {
     ob = "<25%"
   }
-  knn.model_df[i, "Value.Quartile"] <- ob
+  rf.model_df[i, "Value.Quartile"] <- ob
 }
 
 # Convert value quartile format to factor and removes original zestimate
 # column
-knn.model_df[, "Value.Quartile"] <- 
-  as.factor(knn.model_df[, "Value.Quartile"])
-knn.model_df <- knn.model_df %>% select(-Zestimate)
+rf.model_df[, "Value.Quartile"] <- 
+  as.factor(rf.model_df[, "Value.Quartile"])
+rf.model_df <- rf.model_df %>% select(-Zestimate)
 
 # Partition data
 set.seed(1)
 train.index <- sample(1:nrow(knn.model_df), nrow(knn.model_df) * 0.7)
-train.df <- knn.model_df[train.index, ]
-valid.df <- knn.model_df[-train.index, ]
-
-train.norm.df <- train.df
-valid.norm.df <- valid.df
-
-# Normalize the data
-norm.values <- preProcess(train.df[, 1:ncol(knn.model_df) - 1], 
-                          method = c("center", "scale"))
-train.norm.df[, 1:(ncol(knn.model_df) - 1)] <- 
-  predict(norm.values, train.df[, 1:(ncol(knn.model_df) - 1)])
-valid.norm.df[, 1:(ncol(knn.model_df) - 1)] <- 
-  predict(norm.values, valid.df[, 1:(ncol(knn.model_df) - 1)])
-
-# Create empty accuracy dataframe to store the accuracy of the different
-# k values
-accuracy.df <- data.frame(k = 1:20, accuracy = rep(0, 20))
-
-# Use different k values and examine which k value provides the highest
-# accuracy
-for (i in 1:20) {
-  knn.pred <- knn(train.norm.df[, 1:(ncol(knn.model_df) - 1)], 
-                  valid.norm.df[, 1:(ncol(knn.model_df) - 1)],
-                  cl = train.norm.df[, ncol(knn.model_df)], k = i)
-  accuracy.df[i, 2] <- 
-    confusionMatrix(knn.pred, valid.norm.df[, ncol(knn.model_df)])$overall[1]
-}
-
-# Predict for the classification of home value in validation set
-knn.pred <- knn(train.norm.df[, 1:(ncol(knn.model_df) - 1)], 
-                valid.norm.df[, 1:(ncol(knn.model_df) - 1)],
-                cl = train.norm.df[, ncol(knn.model_df)], k = 2)
-
-# Examine the accuracy of the prediction
-# confusionMatrix(knn.pred, valid.norm.df[, ncol(knn.model_df)])
-
-######################
-### Random Forrest ###
-######################
+train.df <- rf.model_df[train.index, ]
+valid.df <- rf.model_df[-train.index, ]
 # Create the random forest model
 model.rf <- randomForest(Value.Quartile ~ ., 
                          data = train.df, ntree = 400, importance = TRUE)

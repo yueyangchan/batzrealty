@@ -182,7 +182,7 @@ server <- function(input, output) {
       geom_point(aes(color = (city %in% clicked_city$city)), size = 4) +
       guides(color = FALSE) +
       labs(
-        title = "Price in USD vs Distance from Downtown in miles",
+        title = "Price in USD for Neighborhoods vs Distance from Downtown in miles",
         x = "Distance",
         y = "Price"
       ) 
