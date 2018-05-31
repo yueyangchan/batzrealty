@@ -4,6 +4,7 @@
 
 library("shiny")
 library("dplyr")
+library("plotly")
 
 all_city <- read.csv("data/City_Zhvi_AllHomes.csv", stringsAsFactors = FALSE)
 state_names <- all_city %>% select(State) %>% unique() %>% arrange(State)
@@ -129,6 +130,67 @@ ui <- navbarPage(
           dataTableOutput("city_rate_table")
         )
       )
+    )
+  ),
+  
+  ####################
+  ##### Ted Chan #####
+  ####################
+  tabPanel(
+    title = "Best Month to Sell Home",
+    mainPanel(
+      # create tabset panel to display table and plot neatly
+      tabsetPanel(
+        type = "tabs",
+        tabPanel(
+          textOutput("month_intro"),
+          br(),
+          plotlyOutput('count_plot'),
+          textOutput('count_summary'),
+          br(),
+          plotlyOutput('price_plot'),
+          textOutput('price_summary')
+          )
+        )
+      )
+  ),
+  
+  tabPanel(
+    title = "Statistical Analysis",
+    mainPanel(
+      tabsetPanel(
+        type = "tabs",
+        tabPanel(
+          textOutput("factor_intro"),
+          br(),
+          h3("Multiple Linear Regression"),
+          strong("We used the following variables 
+                 for our model"), 
+          textOutput("variables"), 
+          em("* Zestimate is Zillow's own valuation 
+             of the property's current value"),
+          br(),
+          br(),
+          strong("Coefficient Results:"),
+          imageOutput("coefficient_screenshot"),
+          textOutput("coefficients"),
+          br(),
+          strong("Insights:"),
+          textOutput("regression_insights"),
+          br(),
+          h3("Classification Model (Random Forest)"),
+          textOutput("classification_intro"),
+          br(),
+          strong("Results"),
+          tableOutput("forest_confusion"),
+          br(),
+          textOutput("forest_result"),
+          br(),
+          strong("Factor Importance:"),
+          plotOutput("importance"),
+          textOutput("importance_explain")
+          )
+        )
     )
   )
 )

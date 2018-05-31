@@ -3,12 +3,16 @@
 # install.packages("jsonlite")
 # install.packages("dplyr")
 # install.packages("ggplot2")
+# install.packages("stringr")
+# install.packages("plotly")
 
 library("shiny")
 library("XML")
 library("jsonlite")
 library("dplyr")
 library("ggplot2")
+library("stringr")
+library("plotly")
 
 # create shiny server function with regular input and output
 # parameters along with a session for changing the input slider
@@ -271,6 +275,147 @@ server <- function(input, output) {
   
   output$city_rate_table <- renderDataTable({
     city_data()
+  })
+  
+  ####################
+  ##### Ted Chan #####
+  ####################
+  source("factor_analysis.R")
+  source("monthly_count.R")
+  source("monthly_price.R")
+  
+  # Intro for Best Month to Sell House
+  output$month_intro <- renderText({
+    "This tab examines if there is a best time of the year to sell a house. 
+    The insights generated can be useful for homesellers to identify the 
+    best month of the year to sell their property."
+  })
+  
+  # Renders Seattle monthly sales count
+  output$count_plot <- renderPlotly({
+    sales_count <- plot_ly(city_avg_df, x = ~Month, y = ~Avg_Value,
+                           type = 'bar') %>%
+      layout(title = "Seattle Homes Sales Count by Month (2009 - 2017)",
+             xaxis = list(title = "Month"),
+             yaxis = list(title = "Count"))
+    sales_count
+  })
+  
+  # Summary for the count plot
+  output$count_summary <- renderText({
+    paste0("The above bar chart summarises the average number of 
+           home sales per month during 2009-2017 in Seattle. On 
+           average, the first two months of the year have the least 
+           home sales while the middle of the year (May-July) have 
+           the most sales. It can be concluded that demand for 
+           homes increase during the summer times. Sellers should 
+           capitalize on that demand and try to sell their homes 
+           during the months of May and July.")
+  })
+  
+  # Renders Seattle monthly median sales price
+  output$price_plot <- renderPlotly({
+    sales_price <- plot_ly(city_avg_price_df, x = ~Month, y = ~Avg_Value,
+                           type = 'bar') %>%
+      layout(title = "Seattle Homes Median Sales Price by Month (2009 - 2017)",
+             xaxis = list(title = "Month"),
+             yaxis = list(title = "Median Sales Price (thousand $)"))
+    sales_price
+  })
+  
+  output$price_summary <- renderText({
+    paste0("We further examined if the time of the year of sales have 
+           an impact on the sales price. The above bar chart shows that 
+           the median sales price have very negligible differences between 
+           the different months. The median sales price trends slightly 
+           upwards in the last few months of the year but the difference 
+           is very small. Therefore, we still recommend sellers to try 
+           to sell their houses in mid-year (May-July) since that is 
+           when the demand for houses is the strongest.")
+  })
+  
+  output$factor_intro <- renderText({
+    paste0("This tab examines the different factors of a home that 
+           contribute to its value. We built a number of models 
+           to identify the statistically significant factors 
+           and attempt to predict home values. Home buyers can use  
+           the insights from this section to identify good value
+           homes as well as the type of homes that would most likely  
+           appreciate in value. Home sellers can identify which factors of 
+           their properties to improve on in order to increase 
+           the potential sales price.")
+  })
+  
+  output$variables <- renderText({
+    paste(colnames(model_df), collapse = ", ")
+  })
+  
+  output$coefficients <- renderText({
+    paste0("Our regression model shows that a property's previous sales price, 
+           the year it was built in, the number of bedrooms, the size of the 
+           finished property in sq.ft and the size of the lot in sq.ft. are 
+           all statistically significant factors in predicting the value of 
+           a home.")
+  })
+  
+  output$coefficient_screenshot <- renderImage({
+    return(list(
+      src = "./img/coefficient_pic.png", 
+      contentType = "image/png",
+      width = 600,
+      height = 390
+    ))
+  }, deleteFile = FALSE)
+  
+  output$regression_insights <- renderText({
+    paste0("Homes that are most likely to retain its value and appreciate 
+           in the future are those that 1) have previously been sold at 
+           a high price 2) were built relatively recent 3) have a high 
+           number of bedrooms and 4) have a large size in both the lot 
+           and the finished property. Buyers should also avoid buying 
+           a townhouse as it has a negative impact on home valuation. 
+           Sellers should be noted that the number of bathrooms have 
+           a negative effect on valuation. It is much more rewarding 
+           to focus on increasing the number of bedrooms.")
+  })
+  
+  output$classification_intro <- renderText({
+    "A random forest model is a supervised machine learning algorithm 
+    that generates multiple decision trees, then combine them all to 
+    make a more accurate and stable classification model. We divided home 
+    value into 4 different levels based on the quantiles 
+    of home value. The first class is any values below the 1st quartile, 
+    the second class is any values between the 1st quartile and the median, 
+    the third class is any values between the median and the 3rd quartile, 
+    and the last class is any values above the 3rd quartile."
+  })
+  
+  output$forest_confusion <- renderTable(rownames = TRUE, {
+    forest_confusion_matrix <- model.rf$confusion
+    forest_confusion_matrix
+  })
+  
+  output$forest_result <- renderText({
+    paste0("The random forest model had an accuracy of ", 
+           forest_accuracy, "%. It is best at predicting the classification 
+           of the top value class (> 75%). The error rate of the model can 
+           potentially be a result of an incomplete model since the value 
+           of a home should derive from more than just the variables we 
+           included in the model.")
+  })
+  
+  output$importance <- renderPlot({
+    varImpPlot(model.rf)
+  })
+  
+  output$importance_explain <- renderText({
+    "The mean decrease accuracy plot shows the loss in prediction performance 
+    when that particular factor is omitted from the dataset while the mean 
+    decrease gini plot shows the decrease in GINI when the GINI factor is omitted. 
+    GINI is a measure of node impurity. The mean decrease gini plot shows how 
+    important a factor is to split the data correctly. The plots reaffirms that 
+    the historical sales price of the home is the most important factor in 
+    determining a home value."
   })
 }
 
