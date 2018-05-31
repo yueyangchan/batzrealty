@@ -190,10 +190,52 @@ ui <- navbarPage(
           strong("Factor Importance:"),
           plotOutput("importance"),
           textOutput("importance_explain")
-          )
         )
+      )
+    )
+  ),
+  tabPanel(
+    title = "Rental Listings",
+    mainPanel(
+      tabsetPanel(
+        type = "tabs",
+        tabPanel(
+          h3("Median Rental Listings"),
+          br(),
+          textOutput("intro"),
+          br(),
+          strong("Studio"),
+          plotlyOutput("studio"),
+          br(),
+          textOutput("studio_sum"),
+          br(),
+          strong("1-Bedroom"),
+          plotlyOutput("onebed"),
+          br(),
+          textOutput("one_sum"),
+          br(),
+          strong("2-Bedroom"),
+          plotlyOutput("twobed"),
+          br(),
+          textOutput("two_sum"),
+          br(),
+          strong("3-Bedroom"),
+          plotlyOutput("threebed"),
+          br(),
+          textOutput("three_sum"),
+          br(),
+          strong("4-Bedroom"),
+          plotlyOutput("fourbed"),
+          br(),
+          textOutput("four_sum"),
+          br(),
+          strong("Conclusion"),
+          textOutput("conclusion")
+        )
+      )
     )
   )
 )
+
 
 shinyUI(ui)

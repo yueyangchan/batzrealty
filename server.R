@@ -8,7 +8,7 @@
 # install.packages("plotly")
 # install.packages("forecast")
 # install.packages("FNN")
-# install.packages("caret")
+# install.packages("caret", dependencies = TRUE)
 # install.packages("rpart")
 # install.packages("rpart.plot")
 # install.packages("randomForest")
@@ -16,6 +16,7 @@
 # install.packages("httr")
 # install.packages("xml2")
 # install.packages("e1071")
+# install.packages("ddalpha")
 
 library("shiny")
 library("XML")
@@ -24,6 +25,7 @@ library("dplyr")
 library("ggplot2")
 library("stringr")
 library("plotly")
+library("ddalpha")
 
 # create shiny server function with regular input and output
 # parameters along with a session for changing the input slider
@@ -427,6 +429,157 @@ server <- function(input, output) {
     important a factor is to split the data correctly. The plots reaffirms that 
     the historical sales price of the home is the most important factor in 
     determining a home value."
+  })
+  
+  ####################
+  # Brianne Ichiyama #
+  ####################
+  
+  # read in csv data
+  studio_data <- read.csv("data/City_MedianRentalPrice_Studio.csv", 
+                          stringsAsFactors = FALSE)
+  one_data <- read.csv("data/City_MedianRentalPrice_1Bedroom.csv", 
+                       stringsAsFactors = FALSE)
+  two_data <- read.csv("data/City_MedianRentalPrice_2Bedroom.csv", 
+                       stringsAsFactors = FALSE)
+  three_data <- read.csv("data/City_MedianRentalPrice_3Bedroom.csv", 
+                         stringsAsFactors = FALSE)
+  four_data <- read.csv("data/City_MedianRentalPrice_4Bedroom.csv", 
+                        stringsAsFactors = FALSE)
+  
+  # filter for recent date
+  alter_data <- function(df) {
+    df <- df %>% 
+      select(Metro, contains("18")) %>% 
+      arrange(X2018.04) %>% 
+      head(5)
+  }
+  
+  studio_data <- alter_data(studio_data)
+  one_data <- alter_data(one_data)
+  two_data <- alter_data(two_data)
+  three_data <- alter_data(three_data)
+  four_data <- alter_data(four_data)
+  
+  # introduction
+  output$intro <- renderText({
+    paste0("This tab examines whether the cities with the highest priced 
+           living spaces are consistent across the living spaces that vary
+           in bedroom availability. By analyzing the results, driving 
+           factors can be attributed to the findings. The data being used is 
+           the most recent record of median rent listings, which is April 
+           of 2018.")
+  })
+  
+  # studio bar graph and summary
+  output$studio <- renderPlotly({
+    p <- plot_ly(data = studio_data, x = ~Metro, y = ~X2018.04,
+                 type = "bar") %>% 
+      layout(title = "5 Cities with Highest Rent for Studios",
+             xaxis = list(title = "City"),
+             yaxis = list(title = "Rent Amount"))
+    p
+  })
+  
+  output$studio_sum <- renderText({
+    paste0("The bar graph above displays the 5 cities with the highest rent
+           for studio living spaces. The results showed that Albuquerque, 
+           Flint, Lincoln, Memphis, and St.Joseph have the highest rent. After
+           analyzing the results, we were able to identify patterns of factors
+           such as the size of the area and what the environment offers. Some
+           specifics include near water and the stature of the archiecture.")
+  })
+  
+  # one-bedroom bar graph and summary
+  output$onebed <- renderPlotly({
+    p <- plot_ly(data = one_data, x = ~Metro, y = ~X2018.04,
+                 type = "bar") %>% 
+      layout(title = "5 Cities with Highest Rent for 1-Bedrooms",
+             xaxis = list(title = "City"),
+             yaxis = list(title = "Rent Amount"))
+    p
+  })
+  
+  output$one_sum <- renderText({
+    paste0("The bar graph above displays the 5 cities with the highest rent
+           for 1-bedroom living spaces. The results showed that Killeeen, 
+           Macomb, Pocatello, Rolla, and Topeka have the highest rent. These
+           cities had almost equivalent rent pricings, which lead us to believe
+           there is a common contributing factor.")
+  })
+  
+  # two-bedroom bar graph and summary
+  output$twobed <- renderPlotly({
+    p <- plot_ly(data = two_data, x = ~Metro, y = ~X2018.04,
+                 type = "bar") %>% 
+      layout(title = "4 Cities with Highest Rent for 2-Bedrooms",
+             xaxis = list(title = "City"),
+             yaxis = list(title = "Rent Amount"))
+    p
+  })
+  
+  output$two_sum <- renderText({
+    paste0("The bar graph above displays the 4 cities with the highest rent
+           for 3-bedroom living spaces. The results showed that Albany,
+           Elizabethtown, Jefferson City, and Killeen have the highest rent. 
+           Here we see the first repetition of Killeen which was seen in the
+           previous bar graph.")
+  })
+  
+  # three-bedroom bar graph and summary
+  output$threebed <- renderPlotly({
+    p <- plot_ly(data = three_data, x = ~Metro, y = ~X2018.04,
+                 type = "bar") %>% 
+      layout(title = "5 Cities with Highest Rent for 3-Bedrooms",
+             xaxis = list(title = "City"),
+             yaxis = list(title = "Rent Amount"))
+    p
+  })
+  
+  output$three_sum <- renderText({
+    paste0("The bar graph above displays the 5 cities with the highest rent
+           for 3-bedroom living spaces. The results showed that Akron, 
+           Augusta, Canton, Fort Wayne, and Pocatello have the highest rent. 
+           There is significantly a lower price ($568.50) in Augusta, which also
+           happens to be the lowest over within the 5 graphs, making Augusta
+           an outlier.")
+  })
+  
+  # four-bed bar graph and summary
+  output$fourbed <- renderPlotly({
+    p <- plot_ly(data = four_data, x = ~Metro, y = ~X2018.04,
+                 type = "bar") %>% 
+      layout(title = "5 Cities with Highest Rent for 4-Bedrooms",
+             xaxis = list(title = "City"),
+             yaxis = list(title = "Rent Amount"))
+    p
+  })
+  
+  output$four_sum <- renderText({
+    paste0("The bar graph above displays the 5 cities with the highest rent
+           for 4-bedroom living spaces. The results showed that Buffalo, 
+           Cleveland, Shreveport, Toledo, and Wichita have the highest rent.
+           Wichita is an outlier with the highest rent amount ($1045), which 
+           happens to be the highest amount of rent overall between the 5 
+           graphs.")
+  })
+  
+  # concluson
+  output$conclusion <- renderText({
+    paste0("The range of prices of rent increase as the amount of
+           bedrooms increase. The only inconsistency is studio living spaces 
+           which have the same range of rent prices as 2-bedroom living spaces. 
+           We found that out all the cities recorded across the five graphs,
+           none of them were repeated except for one (Killeen). This was 
+           unexpected because we assumed that there would consistencies in
+           cities across the various living spaces. Analyzing the resulting 
+           cities, there were patterns of factors that could contribute to 
+           these cities having the largest rent prices. Many of these cities
+           are large in size, which means a heavy population and influx on 
+           rent prices. There were many cities that were located near bodies
+           of water. This enviornment becomes an attraction that can cause
+           upcharges on rent. Knowledge of these factors can be utilized
+           when searching for a place to rent.")
   })
 }
 
