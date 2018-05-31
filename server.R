@@ -1,3 +1,4 @@
+
 # install.packages("shiny")
 # install.packages("XML")
 # install.packages("jsonlite")
@@ -5,6 +6,16 @@
 # install.packages("ggplot2")
 # install.packages("stringr")
 # install.packages("plotly")
+# install.packages("forecast")
+# install.packages("FNN")
+# install.packages("caret")
+# install.packages("rpart")
+# install.packages("rpart.plot")
+# install.packages("randomForest")
+# install.packages("stringr")
+# install.packages("httr")
+# install.packages("xml2")
+# install.packages("e1071")
 
 library("shiny")
 library("XML")

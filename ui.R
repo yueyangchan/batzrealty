@@ -1,6 +1,7 @@
 
 # install.packages("shiny")
 # install.packages("dplyr")
+# install.packages("plotly")
 
 library("shiny")
 library("dplyr")
