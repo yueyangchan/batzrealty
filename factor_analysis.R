@@ -111,7 +111,7 @@ rf.model_df <- rf.model_df %>% select(-Zestimate)
 
 # Partition data
 set.seed(1)
-train.index <- sample(1:nrow(knn.model_df), nrow(knn.model_df) * 0.7)
+train.index <- sample(1:nrow(rf.model_df), nrow(rf.model_df) * 0.7)
 train.df <- rf.model_df[train.index, ]
 valid.df <- rf.model_df[-train.index, ]
 # Create the random forest model
