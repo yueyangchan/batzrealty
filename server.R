@@ -482,14 +482,14 @@ server <- function(input, output) {
   
   output$highest_city_studio <- renderText({
     city <- studio_data[1, 1]
+    city
   })
   
   output$studio_sum <- renderText({
     paste0("The bar graph above displays the 5 cities with the highest rent
            for studio living spaces. The results showed that Hicksville, 
            Montauk, Naples, Potomac, and Princeton have the highest rent. 
-           Montauk, New York has the highest rent of 25K, while the others
-           have a similar rent of around 4K.")
+           ")
   })
   
   # one-bedroom bar graph and summary
@@ -504,6 +504,7 @@ server <- function(input, output) {
   
   output$highest_city_one <- renderText({
     city <- one_data[1, 1]
+    city
   })
   
   output$one_sum <- renderText({
@@ -518,7 +519,7 @@ server <- function(input, output) {
   output$twobed <- renderPlotly({
     p <- plot_ly(data = two_data, x = ~RegionName, y = ~X2018.04,
                  type = "bar") %>% 
-      layout(title = "4 Cities with Highest Rent for 2-Bedrooms",
+      layout(title = "5 Cities with Highest Rent for 2-Bedrooms",
              xaxis = list(title = "City"),
              yaxis = list(title = "Rent Amount"))
     p
@@ -526,10 +527,11 @@ server <- function(input, output) {
   
   output$highest_city_two <- renderText({
     city <- two_data[1, 1]
+    city
   })
   
   output$two_sum <- renderText({
-    paste0("The bar graph above displays the 4 cities with the highest rent
+    paste0("The bar graph above displays the 5 cities with the highest rent
            for 3-bedroom living spaces. The results showed that Albany,
            Elizabethtown, Jefferson City, and Killeen have the highest rent. 
            Here we see the first repetition of Killeen which was seen in the
@@ -548,6 +550,7 @@ server <- function(input, output) {
   
   output$highest_city_three <- renderText({
     city <- three_data[1, 1]
+    city
   })
   
   output$three_sum <- renderText({
@@ -571,6 +574,7 @@ server <- function(input, output) {
   
   output$highest_city_four <- renderText({
     city <- four_data[1, 1]
+    city
   })
   
   output$four_sum <- renderText({
@@ -584,20 +588,17 @@ server <- function(input, output) {
   
   # concluson
   output$conclusion <- renderText({
-    paste0("The range of prices of rent increase as the amount of
-           bedrooms increase. The only inconsistency is studio living spaces 
-           which have the same range of rent prices as 2-bedroom living spaces. 
-           We found that out all the cities recorded across the five graphs,
-           none of them were repeated except for one (Killeen). This was 
-           unexpected because we assumed that there would consistencies in
-           cities across the various living spaces. Analyzing the resulting 
-           cities, there were patterns of factors that could contribute to 
-           these cities having the largest rent prices. Many of these cities
-           are large in size, which means a heavy population and influx on 
-           rent prices. There were many cities that were located near bodies
-           of water. This enviornment becomes an attraction that can cause
-           upcharges on rent. Knowledge of these factors can be utilized
-           when searching for a place to rent.")
+    paste0("After analyzing the results, the cities with the highest rent
+           values are all big cities with a high volume population. These
+           cities are typically heavily traveled to and visited. A few of
+           the most common cities between the different graphs were in 
+           popular states like California and New York, popular travel
+           destinations. Many of these cities are large in size, which means 
+           a heavy population and influx on rent prices. This attractions of
+           these locations can cause upcharges on rent. There were a few
+           cities that were consitent in being one of having the highest
+           rent amounts. This was consistent with what we predicted. Knowledge 
+           of these factors can be utilized when searching for a place to rent.")
   })
 }
 

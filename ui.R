@@ -211,27 +211,42 @@ ui <- navbarPage(
           strong("Studio"),
           plotlyOutput("studio"),
           br(),
-          textOutput("studio_sum"),
+          p("The bar graph above displays the 5 cities with the highest rent
+           for studio living spaces. The results showed that ", 
+            textOutput("highest_city_studio", inline = TRUE), "is the city 
+            with the highest rent."),
           br(),
           strong("1-Bedroom"),
           plotlyOutput("onebed"),
           br(),
-          textOutput("one_sum"),
+          p("The bar graph above displays the 5 cities with the highest rent
+           for one-bedroom living spaces. The results showed that ", 
+            textOutput("highest_city_one", inline = TRUE), "is the city 
+            with the highest rent."),
           br(),
           strong("2-Bedroom"),
           plotlyOutput("twobed"),
           br(),
-          textOutput("two_sum"),
+          p("The bar graph above displays the 5 cities with the highest rent
+           for two-bedroom living spaces. The results showed that ", 
+            textOutput("highest_city_two", inline = TRUE), "is the city 
+            with the highest rent."),
           br(),
           strong("3-Bedroom"),
           plotlyOutput("threebed"),
           br(),
-          textOutput("three_sum"),
+          p("The bar graph above displays the 5 cities with the highest rent
+           for three-bedroom living spaces. The results showed that ", 
+            textOutput("highest_city_three", inline = TRUE), "is the city 
+            with the highest rent."),
           br(),
           strong("4-Bedroom"),
           plotlyOutput("fourbed"),
           br(),
-          textOutput("four_sum"),
+          p("The bar graph above displays the 5 cities with the highest rent
+           for four-bedroom living spaces. The results showed that ", 
+            textOutput("highest_city_four", inline = TRUE), "is the city 
+            with the highest rent."),
           br(),
           strong("Conclusion"),
           textOutput("conclusion")
