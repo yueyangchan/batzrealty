@@ -5,10 +5,10 @@ Project Members: Zechariah Cheung, Ted Chan, Brianne Ichiyama, and Addison Sengv
 Project Description:
 We used the Zillow API and several other csv data provided by Zillow. Since there is so much we can do with these housing data, we narrowed our analysis down to answer 5 main questions:
 1. Does the distance from the neighborhood to downtown Seattle affect the home price?
-2. What is the fastest growing city, in terms of home value?
+2. What is the fastest growing city/state, in terms of home value?
 3. Is there a best time of the year to sell a home to maximize chance of sale and sales price?
 4. What are the most important factors that influence a home value?
-5. How does rent for the different apartment types differ in the different states?
+5. Which cities have the highest median rent for the different apartment types and is this observation consistent across all apartment types? (i.e. cities with the highest studio rent will also be the ones with the highest 1-4 bedroom rents)
 
 R Code Files Description:
 assemble_data.R: Since Zillow doesn't have a list of detailed property information available, we had to manually extract the information using sample property listings, then get the information for its comparables. This r code basically assembles the csv dataset used for analysis.
